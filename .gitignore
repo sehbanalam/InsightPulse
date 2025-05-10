@@ -1,0 +1,42 @@
+# Node.js dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+
+# Build output
+dist/
+build/
+
+# IDE files
+.vscode/
+*.code-workspace
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Prettier and ESLint cache
+.prettiercache
+.eslintcache
+
+# Temporary files
+*.tmp
+*.temp
+
+# Coverage directory
+coverage/
+
+# Package lock files (if using Yarn or npm)
+yarn.lock
+package-lock.json
+
+# Optional: Ignore test snapshots
+__snapshots__/
