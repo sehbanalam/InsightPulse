@@ -18,13 +18,9 @@ const createUserSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters long"), // Password must be at least 6 characters
 });
 
-const updateUserSchema = z.object({
-  name: z.string().optional(), // Name is optional
-  email: z.string().email("Invalid email format").optional(), // Email must be valid if provided
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters long")
-    .optional(), // Password must be valid if provided
+export const updateUserSchema = z.object({
+  name: z.string().min(1).optional(),
+  email: z.string().email().optional(),
 });
 
 const userIdParamSchema = z.object({
@@ -136,39 +132,27 @@ export const getUserById = async (req: Request, res: any) => {
 };
 
 // Controller to update a user
-export const updateUser = async (req: Request, res: any) => {
+export const updateUser = async (req: AuthenticatedRequest, res: any) => {
   try {
     // Validate user ID parameter using Zod schema
-    const paramValidation = userIdParamSchema.safeParse(req.params);
-    if (!paramValidation.success) {
-      // Return validation error response
-      const error: ApiErrorResponse = {
-        success: false,
-        message: "Validation error",
-        status: 400,
-        errors: paramValidation.error.flatten().fieldErrors,
-      };
-      return res.status(400).json(error);
-    }
+    const userId = req.user?.id;
 
     // Validate request body using Zod schema
-    const bodyValidation = updateUserSchema.safeParse(req.body);
-    if (!bodyValidation.success) {
+    const validation = updateUserSchema.safeParse(req.body);
+    if (!validation.success) {
       // Return validation error response
       const error: ApiErrorResponse = {
         success: false,
         message: "Validation error",
         status: 400,
-        errors: bodyValidation.error.flatten().fieldErrors,
+        errors: validation.error.flatten().fieldErrors,
       };
       return res.status(400).json(error);
     }
 
     // Call the service to update the user
-    const user = await UserService.updateUser(
-      paramValidation.data.id,
-      bodyValidation.data
-    );
+    const user = await UserService.updateUser(userId, validation.data);
+
     if (!user) {
       // Return error response if user is not found
       const error: ApiErrorResponse = {
@@ -243,8 +227,6 @@ export const deleteUser = async (req: Request, res: any) => {
 export const loginUser = async (req: Request, res: any) => {
   try {
     const { email, password } = req.body;
-    console.log("email", email);
-    console.log("password", password);
 
     // Check if user exists
     const user = await UserService.getUserByEmail(email);
@@ -260,7 +242,6 @@ export const loginUser = async (req: Request, res: any) => {
 
     // Compare password
     const isMatch = await comparePassword(password, user.password);
-    console.log("isMatch", isMatch);
     if (!isMatch) {
       const error: ApiErrorResponse = {
         success: false,
@@ -303,7 +284,6 @@ export const loginUser = async (req: Request, res: any) => {
 
 export const getUserProfile = async (req: AuthenticatedRequest, res: any) => {
   const user = req.user;
-  console.log("user", user);
 
   if (!user) {
     const error: ApiErrorResponse = {

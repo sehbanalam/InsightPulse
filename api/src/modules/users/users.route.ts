@@ -3,6 +3,8 @@ import { Router } from "express";
 import * as UserController from "./users.controller";
 import { authenticateJWT } from "../../middlewares/auth.middleware";
 
+import { authorizeRoles } from "../../middlewares/role.middleware";
+
 // Initialize the router
 const router = Router();
 
@@ -18,7 +20,12 @@ router.post("/create", UserController.createUser);
  * GET /
  * Calls the getAllUsers method from UserController
  */
-router.get("/", UserController.getAllUsers);
+router.get(
+  "/",
+  authenticateJWT,
+  authorizeRoles("admin"),
+  UserController.getAllUsers
+);
 
 /**
  * Route for user login
@@ -33,7 +40,12 @@ router.post("/login", UserController.loginUser);
  * Protected route - requires JWT authentication
  * Calls the getUserProfile method from UserController
  */
-router.get("/profile", authenticateJWT, UserController.getUserProfile);
+router.get(
+  "/profile",
+  authenticateJWT,
+  authorizeRoles(...["admin", "user"]),
+  UserController.getUserProfile
+);
 
 /**
  * Route to fetch a user by their ID
@@ -47,7 +59,12 @@ router.get("/:id", UserController.getUserById);
  * PUT /:id
  * Calls the updateUser method from UserController
  */
-router.put("/:id", UserController.updateUser);
+router.put(
+  "/:id",
+  authenticateJWT,
+  authorizeRoles(...["admin", "user"]),
+  UserController.updateUser
+);
 
 /**
  * Route to delete a user by their ID
