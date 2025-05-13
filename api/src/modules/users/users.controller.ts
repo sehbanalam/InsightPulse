@@ -1,4 +1,4 @@
-import e, { NextFunction, Request } from "express";
+import { NextFunction, Request } from "express";
 import * as UserService from "./users.service";
 import { ApiSuccessResponse } from "../../interfaces/response.success";
 import { ApiErrorResponse } from "../../interfaces/response.error";
@@ -302,7 +302,6 @@ export const loginUser = async (req: Request, res: any) => {
 };
 
 export const getUserProfile = async (req: AuthenticatedRequest, res: any) => {
-  
   const user = req.user;
   console.log("user", user);
 
