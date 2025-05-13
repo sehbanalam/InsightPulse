@@ -3,7 +3,6 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import { ApiSuccessResponse } from "./interfaces/response.success";
-
 import routes from "./modules"; // This will import all module routes
 import { errorHandler } from "./middlewares/error.middleware";
 

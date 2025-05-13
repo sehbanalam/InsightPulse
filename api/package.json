@@ -15,15 +15,21 @@
   "dependencies": {
     "@types/express": "^5.0.1",
     "@types/node": "^22.15.17",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
-    "pm2": "^6.0.5"
+    "pino": "^9.6.0",
+    "pm2": "^6.0.5",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.18",
     "@types/helmet": "^0.0.48",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/morgan": "^1.9.9",
     "dotenv": "^16.5.0",
     "mongoose": "^8.14.2",
